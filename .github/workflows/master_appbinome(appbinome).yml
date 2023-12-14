@@ -46,9 +46,7 @@ jobs:
     environment:
       name: 'appbinome'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
-
+    
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
@@ -58,13 +56,6 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
       
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_61C068C8EC7B4448B31060AC1C51312F }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_63740F83FEFF4C03A23764498F026D12 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_45224271936A4412AB27BF6D966191C3 }}
-
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
@@ -72,4 +63,4 @@ jobs:
           app-name: 'appbinome'
           slot-name: 'appbinome'
           package: .
-          
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7F9EAF8FB4624CBFB4B00B446F0E4768 }}
